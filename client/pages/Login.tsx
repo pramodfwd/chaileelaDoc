@@ -18,12 +18,38 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_API_URL
+    
+      async function apiFetch(
+      endpoint: string,
+      { method = "GET", body, headers = {} }: { method?: string; body?: unknown; headers?: Record<string, string> } = {}
+    ) {
+      const res = await fetch(`${BASE_URL}${endpoint}`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          ...headers
+        },
+        credentials: "include", // IMPORTANT if using cookies
+        body: body ? JSON.stringify(body) : undefined
+      })
+    
+      if (!res.ok) {
+        const error = await res.text()
+        throw new Error(error || "API Error")
+      }
+    
+      return res.json()
+    }
+    
+  
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await apiFetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
