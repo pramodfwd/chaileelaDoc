@@ -61,6 +61,7 @@ export default function EmployeeDashboard() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const checkAuth = () => {
@@ -93,7 +94,7 @@ export default function EmployeeDashboard() {
   const fetchDocuments = async (userId: string) => {
     try {
       // Fetch ALL documents (not just employee's own documents)
-      const response = await fetch(`/api/documents`, {
+      const response = await fetch(`${BASE_URL}/api/documents`, {
         credentials: "include",
       });
 
@@ -194,7 +195,7 @@ export default function EmployeeDashboard() {
         });
       }
 
-      const response = await fetch("/api/documents/batch-upload", {
+      const response = await fetch(`${BASE_URL}/api/documents/batch-upload`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -228,7 +229,7 @@ export default function EmployeeDashboard() {
 
         // Log activity
         try {
-          await fetch("/api/logs/activity", {
+          await fetch(`${BASE_URL}/api/logs/activity`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -361,7 +362,7 @@ export default function EmployeeDashboard() {
   const handleDeleteDocument = async (docId: string) => {
     try {
       const response = await fetch(
-        `/api/documents/${docId}?role=${user?.role}`,
+        `${BASE_URL}/api/documents/${docId}?role=${user?.role}`,
         {
           method: "DELETE",
         },
@@ -382,7 +383,9 @@ export default function EmployeeDashboard() {
 
   const handleDownloadDocument = async (doc: Document) => {
     try {
-      const response = await fetch(`/api/documents/download/${doc.id}`);
+      const response = await fetch(
+        `${BASE_URL}/api/documents/download/${doc.id}`,
+      );
 
       if (!response.ok) {
         const errorData = await response

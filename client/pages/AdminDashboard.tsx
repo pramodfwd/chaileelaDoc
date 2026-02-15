@@ -99,6 +99,8 @@ export default function AdminDashboard() {
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const users = ["Amit Sharma", "Rohit Verma", "Neha Singh", "Pooja Patel"];
   const [open, setOpen] = useState(false);
+  const BASE_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const checkAuth = () => {
       try {
@@ -130,9 +132,9 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     try {
       const [employeesRes, statsRes, documentsRes] = await Promise.all([
-        fetch("/api/employees"),
-        fetch("/api/dashboard/stats"),
-        fetch("/api/documents?role=admin"),
+        fetch(`${BASE_URL}/api/employees`),
+        fetch(`${BASE_URL}/api/dashboard/stats`),
+        fetch(`${BASE_URL}/api/documents?role=admin`),
       ]);
 
       const employeesData = await employeesRes.json();
@@ -184,7 +186,7 @@ export default function AdminDashboard() {
     }
 
     try {
-      const response = await fetch("/api/employees", {
+      const response = await fetch(`${BASE_URL}/api/employees`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -218,7 +220,7 @@ export default function AdminDashboard() {
 
   const handleBlockEmployee = async (id: string) => {
     try {
-      const response = await fetch(`/api/employees/${id}/block`, {
+      const response = await fetch(`${BASE_URL}/api/employees/${id}/block`, {
         method: "PATCH",
       });
 
@@ -236,7 +238,7 @@ export default function AdminDashboard() {
 
   const handleUnblockEmployee = async (id: string) => {
     try {
-      const response = await fetch(`/api/employees/${id}/unblock`, {
+      const response = await fetch(`${BASE_URL}/api/employees/${id}/unblock`, {
         method: "PATCH",
       });
 
@@ -378,7 +380,7 @@ export default function AdminDashboard() {
         });
       }
 
-      const response = await fetch("/api/documents/batch-upload", {
+      const response = await fetch(`${BASE_URL}/api/documents/batch-upload`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -408,7 +410,7 @@ export default function AdminDashboard() {
         setPendingFiles([]);
 
         try {
-          await fetch("/api/logs/activity", {
+          await fetch(`${BASE_URL}/api/logs/activity`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -439,9 +441,12 @@ export default function AdminDashboard() {
 
   const handleDeleteDocument = async (docId: string) => {
     try {
-      const response = await fetch(`/api/documents/${docId}?role=admin`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${BASE_URL}/api/documents/${docId}?role=admin`,
+        {
+          method: "DELETE",
+        },
+      );
 
       const data = await response.json();
 
@@ -458,7 +463,9 @@ export default function AdminDashboard() {
 
   const handleDownloadDocument = async (doc: any) => {
     try {
-      const response = await fetch(`/api/documents/download/${doc.id}`);
+      const response = await fetch(
+        `${BASE_URL}/api/documents/download/${doc.id}`,
+      );
 
       if (!response.ok) {
         const errorData = await response

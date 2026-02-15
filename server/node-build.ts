@@ -6,6 +6,7 @@ async function startServer() {
   try {
     const app = await createServer();
     const port = process.env.PORT || 3000;
+    console.log("running port is ======>", port);
 
     // In production, serve the built SPA files
     const __dirname = import.meta.dirname;
@@ -27,7 +28,7 @@ async function startServer() {
     app.listen(port, () => {
       console.log(`🚀 Fusion Starter server running on port ${port}`);
       console.log(`📱 Frontend: http://localhost:${port}`);
-      console.log(`🔧 API: http://localhost:${port}/api`);
+      console.log(`🔧 Backend_API: http://localhost:${port}/api`);
     });
 
     // Graceful shutdown
