@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import path from "path";
+import { createServer } from "../../server/index.ts";
+import * as express from "express";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,7 +22,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   const BASE_URL = import.meta.env.VITE_API_URL;
-  console.log("🚀 ~ Login ~ BASE_URL:", BASE_URL);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "mongoose": "^9.1.5",
     "zod": "^3.25.76"
   },
@@ -62,8 +62,8 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.84.2",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/node": "^24.2.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.13",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "@types/three": "^0.176.0",
