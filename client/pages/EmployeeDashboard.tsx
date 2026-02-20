@@ -61,7 +61,7 @@ export default function EmployeeDashboard() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
-  const BASE_URL = import.meta.env.VITE_API_URL;
+  const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
   useEffect(() => {
     const checkAuth = () => {

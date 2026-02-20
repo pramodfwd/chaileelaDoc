@@ -21,14 +21,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const BASE_URL = import.meta.env.VITE_API_URL;
+  const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+      const response = await fetch(`/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -106,6 +106,15 @@ export default function Login() {
             </Button>
           </form>
         </CardContent>
+        <div className="text-center">
+          <Button
+            variant="link"
+            className="text-amber-600"
+            onClick={() => navigate("/reset-password")}
+          >
+            Reset Password?
+          </Button>
+        </div>
       </Card>
     </div>
   );

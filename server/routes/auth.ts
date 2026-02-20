@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { User } from "../models/User";
+import bcrypt from "bcryptjs";
 
 // Simple token encoding/decoding (for demo purposes)
 const encodeToken = (data: any): string => {
@@ -33,8 +34,11 @@ export const handleLogin: RequestHandler<
 > = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("🚀 ~ handleLogin ~ password:", password);
+    console.log("🚀 ~ handleLogin ~ email:", email);
 
     const user = await User.findOne({ email, password });
+    console.log("🚀 ~ handleLogin ~ user:", user);
 
     if (!user) {
       res.status(401).json({ success: false, error: "Invalid credentials" });
@@ -172,56 +176,89 @@ export const handleVerify: RequestHandler = async (req, res) => {
   }
 };
 
-export const handleResetPassword: RequestHandler<
-  any,
-  { success: boolean; message?: string; error?: string },
-  { userId: string; currentPassword: string; newPassword: string }
-> = async (req, res) => {
-  try {
-    const { userId, currentPassword, newPassword } = req.body;
+// export const handleResetPassword: RequestHandler<
+//   any,
+//   { success: boolean; message?: string; error?: string },
+//   { userId: string; currentPassword: string; newPassword: string }
+// > = async (req, res) => {
+//   try {
+//     const { userId, currentPassword, newPassword } = req.body;
+//     console.log(User);
+//     if (!userId || !currentPassword || !newPassword) {
+//       res.status(400).json({
+//         success: false,
+//         error: "Missing required fields: userId, currentPassword, newPassword",
+//       });
+//       return;
+//     }
 
-    if (!userId || !currentPassword || !newPassword) {
-      res.status(400).json({
-        success: false,
-        error: "Missing required fields: userId, currentPassword, newPassword",
-      });
-      return;
-    }
+//     if (newPassword.length < 6) {
+//       res.status(400).json({
+//         success: false,
+//         error: "New password must be at least 6 characters",
+//       });
+//       return;
+//     }
+//     console.log("userId:", userId);
+//     const user = await User.findById({ _id: userId });
+//     console.log("🚀 ~ handleResetPassword ~ User:", User);
+//     console.log("🚀 ~ handleResetPassword ~ user:", user);
 
-    if (newPassword.length < 6) {
-      res.status(400).json({
-        success: false,
-        error: "New password must be at least 6 characters",
-      });
-      return;
-    }
+//     if (!user) {
+//       res.status(404).json({ success: false, error: "User not found" });
+//       return;
+//     }
 
-    const user = await User.findById(userId);
+//     // Verify current password
+//     if (user.password !== currentPassword) {
+//       res
+//         .status(401)
+//         .json({ success: false, error: "Current password is incorrect" });
+//       return;
+//     }
 
-    if (!user) {
-      res.status(404).json({ success: false, error: "User not found" });
-      return;
-    }
+//     // Update password
+//     user.password = newPassword;
+//     await user.save();
 
-    // Verify current password
-    if (user.password !== currentPassword) {
-      res.status(401).json({ success: false, error: "Current password is incorrect" });
-      return;
-    }
+//     res.json({
+//       success: true,
+//       message: "Password reset successfully",
+//     });
+//   } catch (error) {
+//     console.error("Reset password error:", error);
+//     res.status(500).json({
+//       success: false,
+//       error: "Failed to reset password",
+//     });
+//   }
+// };
 
-    // Update password
-    user.password = newPassword;
-    await user.save();
+export const handleResetPassword = async (req, res) => {
+  const { email, currentPassword, newPassword } = req.body;
+  console.log(
+    "🚀 ~ handleResetPassword ~ email:",
+    email,
+    currentPassword,
+    newPassword,
+  );
 
-    res.json({
-      success: true,
-      message: "Password reset successfully",
-    });
-  } catch (error) {
-    console.error("Reset password error:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to reset password",
-    });
+  const user = await User.findOne({ email });
+  console.log("🚀 ~ handleResetPassword ~ user:", user);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
   }
+
+  const isMatch = currentPassword === user.password;
+  console.log("🚀 ~ handleResetPassword ~ isMatch:", isMatch);
+
+  if (!isMatch) {
+    return res.status(400).json({ error: "Current password is incorrect" });
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.json({ message: "Password reset successfully" });
 };

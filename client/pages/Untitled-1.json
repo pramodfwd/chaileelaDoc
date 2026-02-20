@@ -1,0 +1,15 @@
+{
+    "id": "698087883dd4b4a2ace1d554",
+    "email": "admin@cafe.com",
+    "name": "Admin User",
+    "role": "admin",
+    "isActive": true,
+    "createdAt": "2026-02-02T11:16:24.383Z",
+    "documentsCount": 10
+}
+
+{
+  userId: '698087883dd4b4a2ace1d554',
+  currentPassword: 'admin123',
+  newPassword: '123456'
+}

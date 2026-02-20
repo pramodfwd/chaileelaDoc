@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+const { User } = await import("./models/User");
+const { Employee } = await import("./models/Employee");
 
 export async function connectDB() {
   try {
@@ -37,10 +39,6 @@ export async function connectDB() {
     await mongoose.connect(MONGODB_URI, mongooseOptions);
     console.log("✅ Connected to MongoDB successfully!");
 
-    // Create default admin user if not exists
-    const { User } = await import("./models/User");
-    const { Employee } = await import("./models/Employee");
-
     let adminUser = await User.findOne({ email: "admin@cafe.com" });
     if (!adminUser) {
       adminUser = await User.create({
@@ -70,15 +68,24 @@ export async function connectDB() {
       console.log("✅ Admin user already exists in Employee model");
     }
   } catch (error) {
-    console.error("❌ Failed to connect to MongoDB:", error instanceof Error ? error.message : error);
+    console.error(
+      "❌ Failed to connect to MongoDB:",
+      error instanceof Error ? error.message : error,
+    );
     console.error("\n⚠️ MongoDB Connection Troubleshooting Steps:");
-    console.error("1. ✓ Check that your IP address is whitelisted in MongoDB Atlas:");
+    console.error(
+      "1. ✓ Check that your IP address is whitelisted in MongoDB Atlas:",
+    );
     console.error("   - Go to: Dashboard → Network Access");
-    console.error("   - Add your IP address (or use 0.0.0.0/0 for development)");
+    console.error(
+      "   - Add your IP address (or use 0.0.0.0/0 for development)",
+    );
     console.error("2. ✓ Verify the connection string has correct credentials");
     console.error("3. ✓ Ensure the MongoDB cluster is running and accessible");
     console.error("4. ✓ Check network connectivity to MongoDB Atlas");
-    console.error("\n📝 For now, the app will continue to run but MongoDB features may not work.");
+    console.error(
+      "\n📝 For now, the app will continue to run but MongoDB features may not work.",
+    );
     console.error("   Please fix the connection and restart the server.\n");
 
     // Don't throw - let the app continue to run in development mode

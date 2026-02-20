@@ -99,7 +99,7 @@ export default function AdminDashboard() {
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const users = ["Amit Sharma", "Rohit Verma", "Neha Singh", "Pooja Patel"];
   const [open, setOpen] = useState(false);
-  const BASE_URL = import.meta.env.VITE_API_URL;
+  const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
   useEffect(() => {
     const checkAuth = () => {
